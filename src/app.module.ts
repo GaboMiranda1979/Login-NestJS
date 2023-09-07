@@ -11,9 +11,9 @@ import { AuthModule } from './auth/auth.module';
     MongooseModule.forRoot(
       'mongodb+srv://gabriel:admin1234@cluster0.dycxonp.mongodb.net/',
     ),
-    ItemsModule,
-    UsersModule,
     AuthModule,
+    UsersModule,
+    ItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
