@@ -1,27 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { LoginAuthDto } from './dto/login-auth.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from '../users/schema/user.schema';
+import { Model } from 'mongoose';
 import { RegisterAuthDto } from './dto/register-auth.dto';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  async register(registerAuthDto: RegisterAuthDto) {
-    const userCreated = await this.userModule.create(registerAuthDto);
-    return 'This action adds a new auth';
-  }
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async register(userObject: RegisterAuthDto) {
+    const { password } = userObject;
+    const plainToHash = await hash(password, 10);
+    userObject = { ...userObject, password: plainToHash };
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, loginAuthDto: LoginAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return this.userModel.create(userObject);
   }
 }
