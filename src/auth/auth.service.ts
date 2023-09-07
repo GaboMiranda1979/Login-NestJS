@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UsersDocument } from 'src/users/schema/users.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<UsersDocument>,
+  ) {}
+
   async register(registerAuthDto: RegisterAuthDto) {
-    const userCreated = await this.userModule.create(registerAuthDto);
-    return 'This action adds a new auth';
+    const userCreated = await this.userModel.create(registerAuthDto);
+    return userCreated;
   }
 
   findAll() {
