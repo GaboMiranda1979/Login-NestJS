@@ -25,14 +25,14 @@ export class AuthService {
   async login(userObjectLogin: LoginAuthDto) {
     const { email, password } = userObjectLogin;
     const findUser = await this.userModel.findOne({ email });
-    if (!findUser){ 
+    if (!findUser) {
       throw new HttpException('User_Not_Found', 404);
     }
 
     const checkPassword = await compare(password, findUser.password);
 
     if (!checkPassword) {
-      throw new HttpException('Password_Incorrect', 403);
+      throw new HttpException('Invalid_Credentials', 403);
     }
 
     const payload = { id: findUser._id, name: findUser.name };
